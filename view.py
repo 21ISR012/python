@@ -1,5 +1,5 @@
 import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QFileDialog, QVBoxLayout, QWidget
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QLabel, QFileDialog, QVBoxLayout, QWidget, QScrollArea
 from PyQt5.QtCore import Qt
 from model import ImageModel
 
@@ -18,8 +18,12 @@ class MainWindow(QMainWindow):
         self.upload_btn.clicked.connect(self.upload_image)
         self.layout.addWidget(self.upload_btn)
 
+        self.scroll_area = QScrollArea()
         self.image_label = QLabel()
-        self.layout.addWidget(self.image_label)
+        self.image_label.setAlignment(Qt.AlignCenter)
+        self.scroll_area.setWidget(self.image_label)
+        self.scroll_area.setWidgetResizable(True)
+        self.layout.addWidget(self.scroll_area)
 
         self.mouse_position_label = QLabel()
         self.layout.addWidget(self.mouse_position_label)
@@ -37,6 +41,7 @@ class MainWindow(QMainWindow):
         if file_name:
             pixmap, image = self.image_model.load_image(file_name)
             self.image_label.setPixmap(pixmap)
+            self.image_label.adjustSize()
             self.image_label.setMouseTracking(True)
             self.image_label.mouseMoveEvent = self.mouse_move_event
             self.image_label.mousePressEvent = self.mouse_click_event
